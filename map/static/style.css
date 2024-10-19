@@ -1,0 +1,41 @@
+/* Flexbox layout to display profile info and bike photos side by side */
+body {
+    background-color: #494747; /* Light grey background */
+    font-family: Arial, sans-serif; /* Optional: Set a default font */
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    background: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;  /* Space between profile info and bike photos */
+}
+
+.profile-info {
+    flex: 1;  /* Profile info takes up 1 unit of space */
+    color: #00698f;
+}
+
+.bike-photos-container {
+    flex: 1;  /* Bike photos take up 1 unit of space */
+}
+
+.bike-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.bike-photo {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.bike-photo img {
+    max-width: 200px;
+    height: auto;
+}

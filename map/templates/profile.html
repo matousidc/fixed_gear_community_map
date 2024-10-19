@@ -1,0 +1,81 @@
+{% extends "base_generic.html" %}
+
+<!--{% load static %}-->
+
+<!--<head>-->
+<!--    &lt;!&ndash;    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?{% now 'U' %}">&ndash;&gt;-->
+<!--    <link rel="stylesheet" type="text/css" href="static/style.css?{% now 'U' %}"/>-->
+<!--</head>-->
+
+
+{% block content %}
+<nav>
+    <div style="float: right;">
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</nav>
+
+<h2 style="margin-left: 20px;">{{ profile.user.username }}'s profile</h2>
+
+<!-- Display Profile Information -->
+<div class="profile-container">
+    <!-- Profile Info Section -->
+    <div class="profile-info">
+        {% if profile.profile_photo %}
+        <div>
+            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="200">
+        </div>
+        {% else %}
+        <div>
+            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photosss" width="200">
+        </div>
+        {% endif %}
+        <p><strong>City:</strong> {{ profile.city }}</p>
+        <p><strong>Country:</strong> {{ profile.country }}</p>
+        <p><strong>Bike:</strong> {{ profile.bike }}</p>
+        <p><strong>Instagram:</strong>
+            {% if profile.instagram %}
+            <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram }}</a>
+            {% else %}
+            None
+            {% endif %}
+        </p>
+        <p><strong>Strava:</strong>
+            {% if profile.strava %}
+            <a href="{{ profile.strava }}" target="_blank">{{ profile.strava }}</a>
+            {% else %}
+            None
+            {% endif %}
+        </p>
+
+    </div>
+
+    <!-- Bike Photos Section -->
+    <div class="bike-photos-container">
+        <h3>Bike Photos</h3>
+        {% if bike_photos %}
+        <div class="bike-photos">
+            {% for bike_photo in bike_photos %}
+            <div class="bike-photo">
+                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>
+                <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No bike photos uploaded yet.</p>
+        {% endif %}
+    </div>
+</div>
+<!-- Button to Edit Profile -->
+{% if profile.user == user %}
+
+<div style="margin-left: 20px;">
+    <a href="{% url 'create-profile' %}"
+       style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
+        Profile</a>
+
+</div>
+
+{% endif %}
+{% endblock %}
