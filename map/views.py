@@ -69,3 +69,8 @@ def user_detail_view(request, user_id):
     user = get_object_or_404(UserProfiles, user_id=user_id)
     bike_photos = BikePhoto.objects.filter(user=user)
     return render(request, 'profile.html', {'profile': user, 'bike_photos': bike_photos, 'user': request.user})
+
+
+def user_list_view(request):
+    users = UserProfiles.objects.all().order_by('name')
+    return render(request, 'user_list.html', {'users': users})
