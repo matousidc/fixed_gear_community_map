@@ -1,13 +1,12 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views, api_views
-from .views import signup, login_view
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path('signup/', signup, name='signup'),
-    path('login/', login_view, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),  # Optional logout # todo: logout doesnt work
+    path('signup/', views.signup_view, name='signup'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('create-profile', views.create_profile_view, name='create-profile'),
     path('profile', views.profile_view, name='profile'),
     path('user-detail/<int:user_id>', views.user_detail_view, name='user-detail'),

@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, ProfileForm, BikePhotoForm
+from django.contrib.auth.models import User
+from .forms import SignUpForm, LoginForm, ProfileForm, BikePhotoForm
 from .models import UserProfiles, BikePhoto
 
 
@@ -12,30 +14,61 @@ def index(request):
 
 
 # Sign-up view
-def signup(request):
+def signup_view(request):
+    template = 'signup_test.html'
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            auth_login(request, user)  # Automatically log in the user after sign-up
-            # Create a profile for the newly signed-up user
-            UserProfiles.objects.create(user=user)
-            return redirect('create-profile')  # Redirect to home page after sign-up
+            if User.objects.filter(email=form.cleaned_data['email']).exists():
+                return render(request, template, {
+                    'form': form,
+                    'error_message': 'Email already exists.'
+                })
+            elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
+                return render(request, template, {
+                    'form': form,
+                    'error_message': 'Passwords do not match.'
+                })
+            else:
+                user = form.save()
+                auth_login(request, user)  # Automatically log in the user after sign-up
+                # Create a profile for the newly signed-up user
+                UserProfiles.objects.create(user=user)
+                return redirect('create-profile')  # Redirect to home page after sign-up
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, template, {'form': form})
 
 
 # Login view using Django's built-in AuthenticationForm
 def login_view(request):
+    template = 'login_test.html'
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-            auth_login(request, form.get_user())
+            if not User.objects.filter(email=form.cleaned_data['email']).exists():
+                return render(request, template, {
+                    'form': form,
+                    'error_message': 'User with this email doesn\'t exist.'
+                })
+            elif not User.objects.get(email=form.cleaned_data['email']).check_password(
+                    form.cleaned_data['password']):
+                return render(request, template, {
+                    'form': form,
+                    'error_message': 'Wrong password.'
+                })
+            else:
+                auth_login(request, form.get_user())
             return redirect('profile')  # Redirect to home page after login
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, template, {'form': form})
+
+
+@login_required
+def logout_view(request):
+    auth_logout(request)
+    return redirect('login')
 
 
 @login_required
