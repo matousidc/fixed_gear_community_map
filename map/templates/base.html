@@ -24,6 +24,9 @@
         .submit-button:hover {
             background-color: #480d4a;
         }
+        .form-group .errorlist {
+            color: red;
+        }
     </style>
 
     <title>Fixed gear community map</title>
@@ -44,14 +47,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/map/login">Fixed gear community map</a>
+            <a class="navbar-brand" href="/map/">Fixed gear community map</a>
         </div>
 
+        {% block navbar %}
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/map/login">Login</a></li>
             </ul>
         </div>
+        {% endblock %}
     </div>
 </nav>
 

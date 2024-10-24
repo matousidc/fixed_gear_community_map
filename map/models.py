@@ -14,9 +14,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserProfiles(models.Model):
-    name = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True, null=True, default=None)
+    city = models.CharField(max_length=100, blank=True, null=True, default=None)
+    country = models.CharField(max_length=100, blank=True, null=True, default=None)
     bike = models.CharField(max_length=100, blank=True, null=True, default=None)
     instagram = models.URLField(max_length=100, blank=True, null=True, default=None)
     strava = models.URLField(max_length=100, blank=True, null=True, default=None)
@@ -27,6 +27,6 @@ class UserProfiles(models.Model):
 
 class BikePhoto(models.Model):
     user = models.ForeignKey(UserProfiles, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='bike_photos/')
+    photo = models.ImageField(upload_to='bike_photos/', blank=True, null=True, default=None)
     bike_model = models.CharField(max_length=100, blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)

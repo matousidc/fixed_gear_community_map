@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -10,7 +9,7 @@ from .models import UserProfiles, BikePhoto
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the map index.")
+    return render(request, 'landing_page.html')
 
 
 # Sign-up view
@@ -88,7 +87,8 @@ def create_profile_view(request):
     else:
         profile_form = ProfileForm(instance=profile)  # Prefill the form with the current profile data
         bike_photo_form = BikePhotoForm()
-    return render(request, 'create_profile.html', {'profile_form': profile_form, 'bike_photo_form': bike_photo_form})
+    return render(request, 'create_profile_test.html',
+                  {'profile_form': profile_form, 'bike_photo_form': bike_photo_form})
 
 
 @login_required
