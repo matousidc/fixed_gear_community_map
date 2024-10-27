@@ -1,33 +1,21 @@
-{% extends "base_generic.html" %}
-
-<!--{% load static %}-->
-
-<!--<head>-->
-<!--    &lt;!&ndash;    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?{% now 'U' %}">&ndash;&gt;-->
-<!--    <link rel="stylesheet" type="text/css" href="static/style.css?{% now 'U' %}"/>-->
-<!--</head>-->
-
+{% extends "base.html" %}
+{% load static %}
+{% block navbar %}{% endblock %}
 
 {% block content %}
-<nav>
-    <div style="float: right;">
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
-</nav>
-
-<h2 style="margin-left: 20px;">{{ profile.user.username }}'s profile</h2>
+<h2 style="text-align: center;">{{ profile.name }}'s profile</h2>
 
 <!-- Display Profile Information -->
 <div class="profile-container">
     <!-- Profile Info Section -->
-    <div class="profile-info">
+    <div class="profile-info" style="align-items: center; display: flex; flex-direction: column;">
         {% if profile.profile_photo %}
         <div>
-            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="200">
+            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="250">
         </div>
         {% else %}
         <div>
-            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photo" width="200">
+            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photo" width="250">
         </div>
         {% endif %}
         <p><strong>City:</strong> {{ profile.city }}</p>
@@ -35,19 +23,18 @@
         <p><strong>Bike:</strong> {{ profile.bike }}</p>
         <p><strong>Instagram:</strong>
             {% if profile.instagram %}
-            <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram }}</a>
+            <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram_username }}</a>
             {% else %}
             None
             {% endif %}
         </p>
         <p><strong>Strava:</strong>
             {% if profile.strava %}
-            <a href="{{ profile.strava }}" target="_blank">{{ profile.strava }}</a>
+            <a href="{{ profile.strava }}" target="_blank">Strava profile</a>
             {% else %}
             None
             {% endif %}
         </p>
-
     </div>
 
     <!-- Bike Photos Section -->
@@ -58,7 +45,15 @@
             {% for bike_photo in bike_photos %}
             <div class="bike-photo">
                 <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>
-                <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}">
+                <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
+                     class="thumbnail" onclick="showModal('{{ bike_photo.photo.url }}')">
+
+                <!--                {% if profile.user == user %}-->
+                <!--                <form action="{% url 'delete-photo' bike_photo.id %}" method="post" style="display: inline;">-->
+                <!--                    {% csrf_token %}-->
+                <!--                    <button type="submit" class="delete-button">Delete photo</button>-->
+                <!--                </form>-->
+                <!--                {% endif %}-->
             </div>
             {% endfor %}
         </div>
@@ -66,7 +61,13 @@
         <p>No bike photos uploaded yet.</p>
         {% endif %}
     </div>
+    <!-- Modal for image popup -->
+    <div id="photoModal" class="modal" onclick="hideModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
 </div>
+
 <!-- Button to Edit Profile -->
 {% if profile.user == user %}
 
@@ -78,4 +79,22 @@
 </div>
 
 {% endif %}
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showModal(imageUrl) {
+        var modal = document.getElementById("photoModal");
+        var modalImage = document.getElementById("modalImage");
+        modal.style.display = "block";
+        modalImage.src = imageUrl;
+    }
+
+    function hideModal() {
+        var modal = document.getElementById("photoModal");
+        modal.style.display = "none";
+    }
+</script>
 {% endblock %}

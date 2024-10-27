@@ -24,9 +24,24 @@ class UserProfiles(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     profile_photo = models.ImageField(upload_to='profile-photos/', blank=True, null=True, default=None)
 
+    def create_username(self):
+        """Parse only username from instagram link"""
+        if self.instagram:
+            if not self.instagram.split("/")[-1]:
+                self.instagram_username = '@' + self.instagram.split("/")[-2]
+            else:
+                self.instagram_username = "@" + self.instagram.split("/")[-1]
+
 
 class BikePhoto(models.Model):
     user = models.ForeignKey(UserProfiles, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='bike_photos/', blank=True, null=True, default=None)
     bike_model = models.CharField(max_length=100, blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def delete(self, *args, **kwargs):
+        # Delete the photo file from storage
+        if self.photo:
+            self.photo.delete(save=False)
+        # Call the superclass delete method to remove the instance from the database
+        super().delete(*args, **kwargs)

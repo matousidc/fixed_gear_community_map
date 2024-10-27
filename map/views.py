@@ -4,11 +4,12 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpRequest
 from .forms import SignUpForm, LoginForm, ProfileForm, BikePhotoForm
 from .models import UserProfiles, BikePhoto
 
 
-def index(request):
+def index_view(request):
     return render(request, 'landing_page.html')
 
 
@@ -21,7 +22,7 @@ def signup_view(request):
             if User.objects.filter(email=form.cleaned_data['email']).exists():
                 return render(request, template, {
                     'form': form,
-                    'error_message': 'Email already exists.'
+                    'error_message': 'User with this email already exists.'
                 })
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 return render(request, template, {
@@ -48,7 +49,7 @@ def login_view(request):
             if not User.objects.filter(email=form.cleaned_data['email']).exists():
                 return render(request, template, {
                     'form': form,
-                    'error_message': 'User with this email doesn\'t exist.'
+                    'error_message': "User with this email doesn't exist."
                 })
             elif not User.objects.get(email=form.cleaned_data['email']).check_password(
                     form.cleaned_data['password']):
@@ -58,7 +59,7 @@ def login_view(request):
                 })
             else:
                 auth_login(request, form.get_user())
-            return redirect('profile')  # Redirect to home page after login
+            return redirect('profile')
     else:
         form = AuthenticationForm()
     return render(request, template, {'form': form})
@@ -67,7 +68,7 @@ def login_view(request):
 @login_required
 def logout_view(request):
     auth_logout(request)
-    return redirect('login')
+    return redirect('index')
 
 
 @login_required
@@ -95,15 +96,28 @@ def create_profile_view(request):
 def profile_view(request):
     profile = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
     bike_photos = BikePhoto.objects.filter(user=profile)
+    profile.create_username()
     return render(request, 'profile.html', {'profile': profile, 'bike_photos': bike_photos, 'user': request.user})
 
 
-def user_detail_view(request, user_id):
+def user_detail_view(request, user_id: int):
     user = get_object_or_404(UserProfiles, user_id=user_id)
     bike_photos = BikePhoto.objects.filter(user=user)
+    user.create_username()
     return render(request, 'profile.html', {'profile': user, 'bike_photos': bike_photos, 'user': request.user})
 
 
-def user_list_view(request):
+def user_list_view(request: HttpRequest):
     users = UserProfiles.objects.all().order_by('name')
     return render(request, 'user_list.html', {'users': users})
+
+
+@login_required
+def delete_photo(request, photo_id: int):
+    user = UserProfiles.objects.get(user=request.user)
+    photo = get_object_or_404(BikePhoto, id=photo_id, user=user)
+
+    if request.method == 'POST':
+        photo.delete()
+        # messages.success(request, 'Photo deleted successfully.')
+    return redirect('profile')  # Redirect back to profile after deletion
