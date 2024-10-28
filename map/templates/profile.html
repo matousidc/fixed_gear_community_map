@@ -3,24 +3,28 @@
 {% block navbar %}{% endblock %}
 
 {% block content %}
-<h2 style="text-align: center;">{{ profile.name }}'s profile</h2>
+<!--<h2 style="text-align: center;">{{ profile.name }}'s profile</h2>-->
 
 <!-- Display Profile Information -->
 <div class="profile-container">
     <!-- Profile Info Section -->
-    <div class="profile-info" style="align-items: center; display: flex; flex-direction: column;">
+    <div class="profile-info">
+        <h2>{{profile.name}}</h2>
         {% if profile.profile_photo %}
         <div>
-            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="250">
+            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="300" class="thumbnail"
+                 onclick="showModal('{{ profile.profile_photo.url }}')">
         </div>
         {% else %}
         <div>
-            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photo" width="250">
+            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photo" width="300">
         </div>
         {% endif %}
+        <p><strong>About:</strong></p>
+        <!--        <pre>{{ profile.about }}</pre>-->
+        <p>{{ profile.about|linebreaks }}</p>
         <p><strong>City:</strong> {{ profile.city }}</p>
         <p><strong>Country:</strong> {{ profile.country }}</p>
-        <p><strong>Bike:</strong> {{ profile.bike }}</p>
         <p><strong>Instagram:</strong>
             {% if profile.instagram %}
             <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram_username }}</a>
@@ -36,7 +40,14 @@
             {% endif %}
         </p>
     </div>
+    <!-- Button to Edit Profile -->
+    {% if profile.user == user %}
+    <div style="margin-left: 20px;">
+        <a href="{% url 'create-profile' %}"
+           style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
+            Profile</a>
 
+    </div>
     <!-- Bike Photos Section -->
     <div class="bike-photos-container">
         <h3>Bike Photos</h3>
@@ -44,9 +55,10 @@
         <div class="bike-photos">
             {% for bike_photo in bike_photos %}
             <div class="bike-photo">
-                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>
+                <!--                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>-->
                 <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
-                     class="thumbnail" onclick="showModal('{{ bike_photo.photo.url }}')">
+                     class="thumbnail"
+                     onclick="showModal('{{ bike_photo.photo.url }}', 'Bike Model: {{ bike_photo.bike_model }}')">
 
                 <!--                {% if profile.user == user %}-->
                 <!--                <form action="{% url 'delete-photo' bike_photo.id %}" method="post" style="display: inline;">-->
@@ -65,36 +77,9 @@
     <div id="photoModal" class="modal" onclick="hideModal()">
         <span class="close">&times;</span>
         <img class="modal-content" id="modalImage">
+        <div id="modalCaption" class="modal-caption"></div>
     </div>
 </div>
 
-<!-- Button to Edit Profile -->
-{% if profile.user == user %}
-
-<div style="margin-left: 20px;">
-    <a href="{% url 'create-profile' %}"
-       style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
-        Profile</a>
-
-</div>
-
 {% endif %}
-
-
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    function showModal(imageUrl) {
-        var modal = document.getElementById("photoModal");
-        var modalImage = document.getElementById("modalImage");
-        modal.style.display = "block";
-        modalImage.src = imageUrl;
-    }
-
-    function hideModal() {
-        var modal = document.getElementById("photoModal");
-        modal.style.display = "none";
-    }
-</script>
 {% endblock %}

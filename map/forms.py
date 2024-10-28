@@ -32,7 +32,7 @@ class LoginForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfiles
-        fields = ['name', 'city', 'country', 'bike', 'instagram', 'strava', 'profile_photo']
+        fields = ['about', 'name', 'city', 'country', 'instagram', 'strava', 'profile_photo']
 
 
 class BikePhotoForm(forms.ModelForm):

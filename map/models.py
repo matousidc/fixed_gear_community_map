@@ -14,10 +14,10 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserProfiles(models.Model):
+    about = models.TextField(blank=True, null=True, default=None)
     name = models.CharField(max_length=100, blank=True, null=True, default=None)
     city = models.CharField(max_length=100, blank=True, null=True, default=None)
     country = models.CharField(max_length=100, blank=True, null=True, default=None)
-    bike = models.CharField(max_length=100, blank=True, null=True, default=None)
     instagram = models.URLField(max_length=100, blank=True, null=True, default=None)
     strava = models.URLField(max_length=100, blank=True, null=True, default=None)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)

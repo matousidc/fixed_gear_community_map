@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block navbar %}{% endblock %}
 
 {% block content %}
@@ -26,6 +25,13 @@
                         </div>
                     </div>
                     <div class="form-group clearfix">
+                        <label for="about" class="col-md-4 control-label text-right">About me:</label>
+                        <div class="col-md-6">
+                            {{ profile_form.about.errors }}
+                            <textarea name="about" rows="4" cols="50" class="form-control">{{ profile_form.about.value|default_if_none:'' }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
                         <label for="city" class="col-md-4 control-label text-right">City:</label>
                         <div class="col-md-6">
                             {{ profile_form.city.errors }}
@@ -39,14 +45,6 @@
                             {{ profile_form.country.errors }}
                             <input name="country" value="{{profile_form.country.value | default_if_none:''}}"
                                    type="text"
-                                   class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="form-group clearfix">
-                        <label for="bike" class="col-md-4 control-label text-right">Bike:</label>
-                        <div class="col-md-6">
-                            {{ profile_form.bike.errors }}
-                            <input name="bike" value="{{profile_form.bike.value | default_if_none:''}}" type="text"
                                    class="form-control"/>
                         </div>
                     </div>
@@ -71,9 +69,19 @@
                         <label for="profile_photo" class="col-md-4 control-label text-right">Profile Photo:</label>
                         <div class="col-md-6">
                             {{ profile_form.profile_photo.errors }}
-                            <input name="profile_photo" type="file" class="form-control">
+                            <input name="profile_photo"
+                                   value="{{profile_form.profile_photo.url | default_if_none:''}}" type="file"
+                                   class="form-control">
                         </div>
                     </div>
+
+                    <!--                    {% if profile_form.profile_photo %}-->
+                    <!--                    <div>-->
+                    <!--                        <img src="{{ profile_form.profile_photo.url }}" alt="Profile Photoxx" class="existing-photo">-->
+                    <!--                    </div>-->
+                    <!--                    {% else %}-->
+                    <!--                    <p>No profile photo uploaded.</p>-->
+                    <!--                    {% endif %}-->
 
                     <!-- Bike Photo Form -->
                     <h3>Bike Photos</h3>
@@ -95,6 +103,7 @@
                     </div>
                     <div class="col-md-6 col-md-offset-4">
                         <input type="submit" value="Save profile" class="submit-button"/>
+                        <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
             </div>
