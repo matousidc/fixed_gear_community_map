@@ -1,4 +1,4 @@
-from .serializers import UserProfileSerializer, CreateUserProfileSerializer
+from .serializers import UserProfileSerializer, CreateUserProfileSerializer, BikePhotoSerializer
 from .models import UserProfiles
 from rest_framework import generics, status, pagination, permissions, viewsets, filters
 from rest_framework.response import Response
@@ -65,7 +65,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return Response(serializer.data)
 
 
-class ProfileDetailView(generics.RetrieveAPIView):
+class ProfileDetailView(generics.RetrieveAPIView, generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
 
     def get_object(self):

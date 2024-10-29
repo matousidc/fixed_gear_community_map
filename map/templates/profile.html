@@ -39,15 +39,16 @@
             None
             {% endif %}
         </p>
-    </div>
-    <!-- Button to Edit Profile -->
-    {% if profile.user == user %}
-    <div style="margin-left: 20px;">
-        <a href="{% url 'create-profile' %}"
-           style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
-            Profile</a>
+        <!-- Button to Edit Profile -->
+        {% if profile.user == user %}
+        <div style="margin-bottom: 20px; margin-top: 20px;">
+            <a href="{% url 'create-profile' %}"
+               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
+                Profile</a>
 
+        </div>
     </div>
+
     <!-- Bike Photos Section -->
     <div class="bike-photos-container">
         <h3>Bike Photos</h3>
@@ -58,27 +59,28 @@
                 <!--                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>-->
                 <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
                      class="thumbnail"
-                     onclick="showModal('{{ bike_photo.photo.url }}', 'Bike Model: {{ bike_photo.bike_model }}')">
-
-                <!--                {% if profile.user == user %}-->
-                <!--                <form action="{% url 'delete-photo' bike_photo.id %}" method="post" style="display: inline;">-->
-                <!--                    {% csrf_token %}-->
-                <!--                    <button type="submit" class="delete-button">Delete photo</button>-->
-                <!--                </form>-->
-                <!--                {% endif %}-->
+                     onclick="showModal('{{ bike_photo.photo.url }}', '{{ bike_photo.bike_model }}')">
             </div>
             {% endfor %}
         </div>
         {% else %}
         <p>No bike photos uploaded yet.</p>
         {% endif %}
+        <!-- Modal for image popup -->
+        <div id="photoModal" class="modal" onclick="hideModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+            <div id="modalCaption" class="modal-caption"></div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <a href="{% url 'manage-bikes' %}"
+               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Upload
+                or delete photos</a>
+
+        </div>
     </div>
-    <!-- Modal for image popup -->
-    <div id="photoModal" class="modal" onclick="hideModal()">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modalImage">
-        <div id="modalCaption" class="modal-caption"></div>
-    </div>
+
 </div>
 
 {% endif %}

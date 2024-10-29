@@ -97,7 +97,7 @@ def manage_bikes_view(request):
             photo.save()
 
         bike_photo_form = BikePhotoForm(request.POST, request.FILES)  # new uploaded pics
-        if bike_photo_form.is_valid():  # TODO: user form.save() override
+        if bike_photo_form.is_valid(): # TODO: user form.save() override
             if bike_photo_form.has_changed():
                 photo = request.FILES.get('photo')
                 BikePhoto.objects.create(user=user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'])

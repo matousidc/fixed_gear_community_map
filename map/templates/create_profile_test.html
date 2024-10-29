@@ -83,24 +83,6 @@
                     <!--                    <p>No profile photo uploaded.</p>-->
                     <!--                    {% endif %}-->
 
-                    <!-- Bike Photo Form -->
-                    <h3>Bike Photos</h3>
-                    <div class="form-group clearfix">
-                        <label for="photo" class="col-md-4 control-label text-right">Upload Bike Photo:</label>
-                        <div class="col-md-6">
-                            {{ bike_photo_form.photo.errors }}
-                            <input name="photo" type="file" multiple class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group clearfix">
-                        <label for="bike_model" class="col-md-4 control-label text-right">Bike Model:</label>
-                        <div class="col-md-6">
-                            {{ bike_photo_form.bike_model.errors }}
-                            <input name="bike_model" value="{{bike_photo_form.bike_model.value | default_if_none:''}}"
-                                   type="text"
-                                   class="form-control"/>
-                        </div>
-                    </div>
                     <div class="col-md-6 col-md-offset-4">
                         <input type="submit" value="Save profile" class="submit-button"/>
                         <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>

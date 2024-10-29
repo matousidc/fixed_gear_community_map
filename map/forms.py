@@ -10,7 +10,7 @@ class SignUpForm(forms.Form):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     # TODO: create class Meta, but have test done before
-    def save(self, commit=True):
+    def save(self):
         user = User.objects.create_user(username=self.cleaned_data['email'].split('@')[0],
                                         email=self.cleaned_data['email'],
                                         password=self.cleaned_data['password1'])
@@ -34,8 +34,19 @@ class ProfileForm(forms.ModelForm):
         model = UserProfiles
         fields = ['about', 'name', 'city', 'country', 'instagram', 'strava', 'profile_photo']
 
+    def save(self, commit=True):
+        """Delete the old profile photo if a new one is uploaded"""
+        if self.instance.pk and self.cleaned_data['profile_photo']:
+            old_profile_photo = UserProfiles.objects.get(pk=self.instance.pk).profile_photo
+            if old_profile_photo:
+                old_profile_photo.delete(save=False)
+        return super().save(commit)
+
 
 class BikePhotoForm(forms.ModelForm):
     class Meta:
         model = BikePhoto
-        fields = ['user', 'photo', 'bike_model']
+        fields = ['photo', 'bike_model']
+
+    # def save(self, commit=True):
+    #     bike_photo = BikePhoto.objects.create(user=self.user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'])

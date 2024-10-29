@@ -40,7 +40,7 @@ class BikePhoto(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def delete(self, *args, **kwargs):
-        # Delete the photo file from storage
+        """Delete the photo file from storage"""
         if self.photo:
             self.photo.delete(save=False)
         # Call the superclass delete method to remove the instance from the database
