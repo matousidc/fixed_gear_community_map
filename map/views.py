@@ -80,7 +80,7 @@ def create_profile_view(request):
         if profile_form.is_valid():
             if profile_form.has_changed():
                 profile_form.save()  # Save the updated profile
-                return redirect('profile')  # Redirect to the profile view page
+            return redirect('profile')  # Redirect to the profile view page
     else:
         profile_form = ProfileForm(instance=profile)  # Prefill the form with the current profile data
     return render(request, 'create_profile_test.html',
@@ -97,7 +97,7 @@ def manage_bikes_view(request):
             photo.save()
 
         bike_photo_form = BikePhotoForm(request.POST, request.FILES)  # new uploaded pics
-        if bike_photo_form.is_valid():  # TODO: user form.save() override
+        if bike_photo_form.is_valid():  # TODO: use form.save() override
             if bike_photo_form.has_changed():
                 photo = request.FILES.get('photo')
                 BikePhoto.objects.create(user=user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'])
@@ -131,7 +131,6 @@ def user_list_view(request: HttpRequest):
 def delete_bike_photo(request, photo_id: int):
     user = UserProfiles.objects.get(user=request.user)
     photo = get_object_or_404(BikePhoto, id=photo_id, user=user)
-    print("wwww", photo)
     if request.method == 'POST':
         photo.delete()
-    return redirect('manage-bikes')  # Redirect back to profile after deletion
+    return redirect('manage-bikes')

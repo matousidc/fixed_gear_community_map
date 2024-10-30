@@ -89,6 +89,6 @@ class LogoutTest(TestCase):
         response = self.client.post(self.logout_url)
         self.assertEqual(response.status_code, 302)
         user = auth.get_user(self.client)
-        self.assertRedirects(response, reverse('login'))
+        self.assertRedirects(response, reverse('index'))
         self.assertFalse(user.is_authenticated)
         self.assertFalse(self.client.session.get('_auth_user_id'))

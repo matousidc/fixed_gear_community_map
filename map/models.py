@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.conf import settings
+from django_countries.fields import CountryField
 
 
 # This code is triggered whenever a new user has been created and saved to the database
@@ -17,7 +18,7 @@ class UserProfiles(models.Model):
     about = models.TextField(blank=True, null=True, default=None)
     name = models.CharField(max_length=100, blank=True, null=True, default=None)
     city = models.CharField(max_length=100, blank=True, null=True, default=None)
-    country = models.CharField(max_length=100, blank=True, null=True, default=None)
+    country = CountryField(blank_label='(Select Country)', blank=True, null=True, default=None)
     instagram = models.URLField(max_length=100, blank=True, null=True, default=None)
     strava = models.URLField(max_length=100, blank=True, null=True, default=None)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)

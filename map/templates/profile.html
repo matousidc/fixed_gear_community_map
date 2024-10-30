@@ -24,7 +24,7 @@
         <!--        <pre>{{ profile.about }}</pre>-->
         <p>{{ profile.about|linebreaks }}</p>
         <p><strong>City:</strong> {{ profile.city }}</p>
-        <p><strong>Country:</strong> {{ profile.country }}</p>
+        <p><strong>Country:</strong> {{ profile.country.name }}</p>
         <p><strong>Instagram:</strong>
             {% if profile.instagram %}
             <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram_username }}</a>
