@@ -92,9 +92,12 @@ def manage_bikes_view(request):
     user = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
     bike_photos = BikePhoto.objects.filter(user=user)
     if request.method == 'POST':
-        for model, photo in zip(request.POST.getlist('bike_model'), bike_photos):  # updating text for existing photos
-            photo.bike_model = model
-            photo.save()
+        bike_models = request.POST.getlist("bike_model")
+        photo_order = request.POST.getlist("photo-order[]")
+        # bike_photos.get(id=7)  # use this for indexing
+        # TODO: atomic update
+        for idx, photo_id in enumerate(photo_order):  # updating order for existing photos
+            BikePhoto.objects.filter(id=int(photo_id)).update(display_order=idx, bike_model=bike_models[idx])
 
         bike_photo_form = BikePhotoForm(request.POST, request.FILES)  # new uploaded pics
         if bike_photo_form.is_valid():  # TODO: use form.save() override

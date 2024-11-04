@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <style>
@@ -137,7 +138,6 @@
         text-align: center;
         margin-bottom: 30px;
         margin-right: 30px;
-        cursor: move;
     }
     .thumbnail-manage {
         width: 100%;
@@ -149,6 +149,40 @@
         opacity: 0.4;  /* Semi-transparent during dragging */
         border: 2px dashed #ccc;
     }
+    .handle {
+        display: inline-block;
+        border-top: 3px solid var(--dark);
+        width: 30px;
+        padding-top: 5px;
+        cursor: grab;
+    }
+        .handle:after, .handle:before {
+    display: block;
+    content: "";
+    padding-top: 5px;
+    border-top: 3px solid var(--dark);
+    }
+    .handle:hover, .handle:hover:before, .handle:hover:after {
+        border-color: var(--primary);
+    }
+    .handle:active, .handle:active:before, .handle:active:after {
+        cursor: grabbing;
+    }
+    .drag-handle {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        color: black;
+        padding: 4px;
+        cursor: grab;
+        font-size: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .drag-handle i {
+        font-size: 32px;
+    }
     </style>
 
     <title>Fixed gear community map</title>
@@ -157,6 +191,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
 </head>
 <body class="override dark-background">
 <nav class="navbar navbar-inverse" role="navigation">
@@ -194,7 +234,7 @@
 <div class="container">
     {% block content %}{% endblock %}
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+
 
 <script>
     function showModal(imageUrl, captionText) {
@@ -210,20 +250,21 @@
         var modal = document.getElementById("photoModal");
         modal.style.display = "none";
     }
-    const photoGallery = document.getElementById('photo-gallery');
 
-    new Sortable(photoGallery, {
+    var sortable = new Sortable(document.getElementById('sortable-list'), {
         animation: 150,  // Smooth animations during drag-and-drop
         ghostClass: 'sortable-ghost',  // CSS class applied during dragging
-        onEnd: function () {
-            console.log("fuck mee")
-            // Here you can add code to display the new order in the console if you want to experiment
-            let photoOrder = [];
-            document.querySelectorAll('.photo-item').forEach(function (item) {
-                photoOrder.push(item.getAttribute('data-photo-id'));
-            });
-            console.log('New photo order:', photoOrder);
-        }
+        handle: '.drag-handle',  // Drag handle selector
+<!--        onUpdate: function () {-->
+<!--            let photoOrder = [];-->
+<!--            document.querySelectorAll('.photo-item').forEach(function (item) {-->
+<!--                photoOrder.push(item.getAttribute('data-photo-id'));-->
+<!--            });-->
+<!--            document.getElementById('photo-order').value = photoOrder;-->
+<!--            console.log("jebat")-->
+<!--            const photoOrder = Array.from(evt.target.children).map(item => item.querySelector('input[name="photo_order[]"]').value);-->
+<!--            document.getElementById('photo_order_json').value = JSON.stringify(photoOrder);-->
+<!--        }-->
     });
 </script>
 

@@ -45,7 +45,7 @@ class ProfileForm(forms.ModelForm):
 class BikePhotoForm(forms.ModelForm):
     class Meta:
         model = BikePhoto
-        fields = ['photo', 'bike_model']
+        fields = ['photo', 'bike_model', 'display_order']
 
     # def save(self, commit=True):
     #     bike_photo = BikePhoto.objects.create(user=self.user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'])

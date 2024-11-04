@@ -15,10 +15,15 @@
                     <p class="bg-danger p-d ml-b" style="background-color: #333; color: red;">{{ error_message }}</p>
                     {% endif %}
                     <!-- Display existing photos -->
-                    <div class="photo-gallery" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div class="photo-gallery" id="sortable-list" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         {% for photo in user_photos %}
                         <div class="photo-item">
                             <img src="{{ photo.photo.url }}" alt="Bike Photo" class="thumbnail-manage">
+                            <div class="drag-handle">
+                                <!--                                <i class="fa-solid fa-grip-vertical"></i> &lt;!&ndash; Font Awesome icon for grip handle &ndash;&gt;-->
+                                <i class="fa-solid fa-grip-vertical"></i>
+                            </div>
+                            <input type="hidden" name="photo-order[]" value="{{ photo.id }}">
                             <div class="form-group clearfix">
                                 <label for="bike_model" class="col-md-5 control-label text-left"
                                        style="text-align: left; margin-top: 10px; margin-right: -30px;">Bike
@@ -57,7 +62,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-md-offset-4">
-                        <input type="submit" value="Save profile" class="submit-button"/>
+                        <input type="submit" value="Save changes" class="submit-button"/>
                         <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>

@@ -40,6 +40,11 @@ class BikePhoto(models.Model):
     bike_model = models.CharField(max_length=100, blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
     def delete(self, *args, **kwargs):
         """Delete the photo file from storage"""
         if self.photo:
