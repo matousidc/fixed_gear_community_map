@@ -22,7 +22,7 @@ def get_user_token():
     url = 'http://localhost:8000/api-token-auth/'
     data = {
         'username': 'matous',  # Replace with your actual username
-        'password': 'sharingan610'  # Replace with your actual password
+        'password': 'xx'  # Replace with your actual password
     }
     response = requests.post(url, data=data)
     print(response.json())
