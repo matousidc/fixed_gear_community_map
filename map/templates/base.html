@@ -165,6 +165,11 @@
     .drag-handle i {
         font-size: 32px;
     }
+    #map {
+            height: 600px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
     </style>
 
     <title>Fixed gear community map</title>
@@ -178,6 +183,9 @@
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin=""></script>
 
 </head>
 <body class="override dark-background">
@@ -237,17 +245,30 @@
         animation: 150,  // Smooth animations during drag-and-drop
         ghostClass: 'sortable-ghost',  // CSS class applied during dragging
         handle: '.drag-handle',  // Drag handle selector
-<!--        onUpdate: function () {-->
-<!--            let photoOrder = [];-->
-<!--            document.querySelectorAll('.photo-item').forEach(function (item) {-->
-<!--                photoOrder.push(item.getAttribute('data-photo-id'));-->
-<!--            });-->
-<!--            document.getElementById('photo-order').value = photoOrder;-->
-<!--            console.log("jebat")-->
-<!--            const photoOrder = Array.from(evt.target.children).map(item => item.querySelector('input[name="photo_order[]"]').value);-->
-<!--            document.getElementById('photo_order_json').value = JSON.stringify(photoOrder);-->
-<!--        }-->
     });
+
+    function deletePhoto(button) {
+        const photoId = button.getAttribute('data-photo-id');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`delete-photo/${photoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // If successful, remove the photo item from the DOM
+                button.closest('.photo-item').remove();
+            } else {
+                console.error('Failed to delete photo:', response.status);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
 </script>
 
 </body>

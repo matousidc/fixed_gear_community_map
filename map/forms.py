@@ -8,7 +8,10 @@ class SignUpForm(forms.Form):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
-    # TODO: create class Meta, but have test done before
+    class Meta:
+        model = User
+        fields = ['email', 'password1', 'password2']
+
     def save(self):
         user = User.objects.create_user(username=self.cleaned_data['email'].split('@')[0],
                                         email=self.cleaned_data['email'],

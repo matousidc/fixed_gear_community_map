@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db import transaction
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpRequest
+from django.http import HttpRequest, Http404
 from .forms import SignUpForm, LoginForm, ProfileForm, BikePhotoForm
 from .models import UserProfiles, BikePhoto
 
@@ -95,15 +96,17 @@ def manage_bikes_view(request):
         bike_models = request.POST.getlist("bike_model")
         photo_order = request.POST.getlist("photo-order[]")
         # bike_photos.get(id=7)  # use this for indexing
-        # TODO: atomic update
-        for idx, photo_id in enumerate(photo_order):  # updating order for existing photos
-            BikePhoto.objects.filter(id=int(photo_id)).update(display_order=idx, bike_model=bike_models[idx])
+        with transaction.atomic():
+            for idx, photo_id in enumerate(photo_order):  # updating order for existing photos
+                BikePhoto.objects.filter(id=int(photo_id)).update(display_order=idx, bike_model=bike_models[idx])
 
         bike_photo_form = BikePhotoForm(request.POST, request.FILES)  # new uploaded pics
         if bike_photo_form.is_valid():  # TODO: use form.save() override
             if bike_photo_form.has_changed():
                 photo = request.FILES.get('photo')
-                BikePhoto.objects.create(user=user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'])
+                if photo:
+                    BikePhoto.objects.create(user=user, photo=photo,
+                                             bike_model=bike_photo_form.cleaned_data['bike_model'])
         return redirect('profile')  # Redirect to the profile view page
     else:
         bike_photo_form = BikePhotoForm()
@@ -132,8 +135,11 @@ def user_list_view(request: HttpRequest):
 
 @login_required
 def delete_bike_photo(request, photo_id: int):
-    user = UserProfiles.objects.get(user=request.user)
-    photo = get_object_or_404(BikePhoto, id=photo_id, user=user)
+    try:
+        user = UserProfiles.objects.get(user=request.user)
+        photo = get_object_or_404(BikePhoto, id=photo_id, user=user)
+    except Http404:  # handling deleting photos that don't belong to user or don't exist
+        return redirect('manage-bikes')
     if request.method == 'POST':
         photo.delete()
     return redirect('manage-bikes')

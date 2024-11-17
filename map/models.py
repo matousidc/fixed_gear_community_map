@@ -39,8 +39,7 @@ class BikePhoto(models.Model):
     photo = models.ImageField(upload_to='bike_photos/', blank=True, null=True, default=None)
     bike_model = models.CharField(max_length=100, blank=True, null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    display_order = models.PositiveIntegerField(default=0)
+    display_order = models.PositiveIntegerField(default=0, blank=True, null=True)
 
     class Meta:
         ordering = ['display_order']

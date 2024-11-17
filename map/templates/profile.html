@@ -59,7 +59,7 @@
                 <!--                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>-->
                 <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
                      class="thumbnail"
-                     onclick="showModal('{{ bike_photo.photo.url }}', '{{ bike_photo.bike_model }}')">
+                     onclick="showModal('{{ bike_photo.photo.url }}', '{{ bike_photo.bike_model | default_if_none:'' }}')">
             </div>
             {% endfor %}
         </div>
