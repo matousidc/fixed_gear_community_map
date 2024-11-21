@@ -1,3 +1,4 @@
+import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.contrib.auth import login as auth_login
@@ -11,7 +12,13 @@ from .models import UserProfiles, BikePhoto
 
 
 def index_view(request):
-    return render(request, 'landing_page.html')
+    marker_coordinates = {}
+    xx = UserProfiles.objects.filter(latitude__isnull=False)
+    for x in xx:
+        marker_coordinates[x.name] = {"latitude": x.latitude, "longitude": x.longitude,
+                                      "popup_message": f"city: {x.city}, {x.country}",
+                                      "profile": f"/map/user-detail/{x.user_id}"}
+    return render(request, 'landing_page.html', {"marker": marker_coordinates})
 
 
 # Sign-up view
@@ -80,12 +87,32 @@ def create_profile_view(request):
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         if profile_form.is_valid():
             if profile_form.has_changed():
-                profile_form.save()  # Save the updated profile
+                # needed to get the instance without saving (commit=False) and update attributes
+                user_profile = profile_form.save(commit=False)
+                if 'city' in profile_form.changed_data:
+                    resp = nominatim_api(request)
+                    user_profile.latitude = resp[0]['lat']
+                    user_profile.longitude = resp[0]['lon']
+                user_profile.save()  # Save the updated profile
             return redirect('profile')  # Redirect to the profile view page
     else:
         profile_form = ProfileForm(instance=profile)  # Prefill the form with the current profile data
     return render(request, 'create_profile_test.html',
                   {'profile_form': profile_form})
+
+
+def nominatim_api(request) -> dict:
+    """Finds GPS location for the city user specified in the form"""
+    location_url = f"https://nominatim.openstreetmap.org/search?q={request.POST['city']},{request.POST['country']}&format=json&limit=1"
+    headers = {
+        'User-Agent': 'Fixed gear community map',
+        'email': 'matousslonek@gmail.com'
+    }
+    resp = requests.get(location_url, headers=headers)
+    lat, lon = resp.json()[0]['lat'], resp.json()[0]['lon']
+    bounding_box = resp.json()[0]['boundingbox']  # example: ['52.3382448', '52.6755087', '13.0883450', '13.7611609']
+    # TODO: randomly place marker within the bounding box
+    return resp.json()
 
 
 @login_required
@@ -117,14 +144,15 @@ def manage_bikes_view(request):
 def profile_view(request):
     profile = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
     bike_photos = BikePhoto.objects.filter(user=profile)
-    profile.create_username()
+    profile.create_instagram_username()
     return render(request, 'profile.html', {'profile': profile, 'bike_photos': bike_photos, 'user': request.user})
 
 
 def user_detail_view(request, user_id: int):
     user = get_object_or_404(UserProfiles, user_id=user_id)
     bike_photos = BikePhoto.objects.filter(user=user)
-    user.create_username()
+    user.create_instagram_username()
+    # TODO: logout is rendered even if user is not logged in
     return render(request, 'profile.html', {'profile': user, 'bike_photos': bike_photos, 'user': request.user})
 
 

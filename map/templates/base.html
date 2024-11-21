@@ -165,11 +165,51 @@
     .drag-handle i {
         font-size: 32px;
     }
+
+
     #map {
             height: 600px;
             margin-bottom: 30px;
             border-radius: 8px;
         }
+
+    /* Popup container styling */
+    .leaflet-popup-content {
+        font-family: Arial, sans-serif;
+        font-size: 16px; /* Larger font size */
+        color: #333; /* Darker text color */
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Custom class for additional popup styling */
+    .popup-styled .leaflet-popup-content-wrapper {
+        background-color: #f9f9f9; /* Light background */
+        border: 2px solid purple; /* Green border */
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add some shadow */
+        padding: 5px;
+    }
+    .popup-styled h3 {
+        font-size: 20px; /* Larger font for the title */
+        color: purple;
+        margin: 0;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #ddd; /* Optional divider */
+    }
+    .popup-styled p {
+        margin: 5px 0 0;
+        color: #555; /* Slightly lighter text */
+        font-size: 12px;
+    }
+    .custom-popup a {
+        color: #1d72b8; /* Link color */
+        text-decoration: underline; /* Underline the link */
+    }
+    .custom-popup a:hover {
+        color: #0056b3; /* Hover color */
+    }
     </style>
 
     <title>Fixed gear community map</title>
@@ -186,6 +226,13 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
+          rel='stylesheet'/>
 
 </head>
 <body class="override dark-background">

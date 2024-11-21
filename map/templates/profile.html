@@ -45,8 +45,8 @@
             <a href="{% url 'create-profile' %}"
                style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
                 Profile</a>
-
         </div>
+        {% endif %}
     </div>
 
     <!-- Bike Photos Section -->
@@ -56,7 +56,6 @@
         <div class="bike-photos">
             {% for bike_photo in bike_photos %}
             <div class="bike-photo">
-                <!--                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>-->
                 <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
                      class="thumbnail"
                      onclick="showModal('{{ bike_photo.photo.url }}', '{{ bike_photo.bike_model | default_if_none:'' }}')">
@@ -73,15 +72,16 @@
             <div id="modalCaption" class="modal-caption"></div>
         </div>
 
+        {% if profile.user == user %}
         <div style="margin-bottom: 10px;">
             <a href="{% url 'manage-bikes' %}"
                style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Upload
                 or delete photos</a>
 
         </div>
+        {% endif %}
     </div>
 
 </div>
 
-{% endif %}
 {% endblock %}

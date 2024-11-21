@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -24,8 +23,10 @@ class UserProfiles(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     profile_photo = models.ImageField(upload_to='profile-photos/', blank=True, null=True, default=None)
+    latitude = models.FloatField(blank=True, null=True, default=None)
+    longitude = models.FloatField(blank=True, null=True, default=None)
 
-    def create_username(self):
+    def create_instagram_username(self):
         """Parse only username from instagram link"""
         if self.instagram:
             if not self.instagram.split("/")[-1]:

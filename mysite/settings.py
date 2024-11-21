@@ -84,6 +84,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
+        # 'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': BASE_DIR / 'sqlite.db',
     }
 }
@@ -144,3 +145,8 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# GDAL_LIBRARY_PATH = r"C:\OSGeo4W\bin\gdal309.dll"
+# GEOS_LIBRARY_PATH = r"C:\OSGeo4W\bin\geos_c.dll"
+# PROJ_LIBRARY_PATH = r'C:\OSGeo4W64\share\proj'
+# SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
