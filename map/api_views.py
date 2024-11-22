@@ -1,5 +1,5 @@
 import requests
-from .serializers import UserProfileSerializer, CreateUserProfileSerializer, BikePhotoSerializer
+from .serializers import UserProfileSerializer, CreateUserProfileSerializer, MarkersSerializer
 from .models import UserProfiles
 from rest_framework import generics, status, pagination, permissions, filters
 from rest_framework.response import Response
@@ -70,11 +70,7 @@ class ProfileDetailView(generics.RetrieveAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class NominatimRequestView(generics.CreateAPIView):
-
-    def post(self, request, *args, **kwargs):
-        city = request.data.get('city')
-        country = request.data.get('country')
-        url = f"https://nominatim.openstreetmap.org/search?city={city}&country={country}&format=json&limit=1"
-        resp = requests.post(url)
-        return Response({'resp': resp})
+class GetMarkersView(generics.ListAPIView):
+    queryset = UserProfiles.objects.all()
+    serializer_class = MarkersSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

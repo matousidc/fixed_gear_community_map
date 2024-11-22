@@ -38,11 +38,12 @@ class ProfileForm(forms.ModelForm):
 
     def save(self, commit=True):
         """Delete the old profile photo if a new one is uploaded"""
-        if self.instance.pk and self.cleaned_data['profile_photo']:
+        if (self.instance.pk and self.cleaned_data['profile_photo'] and
+                self.cleaned_data['profile_photo'] != self.instance.profile_photo):
             old_profile_photo = UserProfiles.objects.get(pk=self.instance.pk).profile_photo
             if old_profile_photo:
                 old_profile_photo.delete(save=False)
-        return super().save(commit)  # TODO: error here somewhere, photos are being deleted by themself
+        return super().save(commit)
 
 
 class BikePhotoForm(forms.ModelForm):

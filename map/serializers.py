@@ -37,3 +37,11 @@ class BikePhotoSerializer(serializers.ModelSerializer):
             if value.size > 2 * 1024 * 1024:  # Limit file size to 2MB
                 raise serializers.ValidationError("Image size should not exceed 2MB.")
             return value
+
+
+class MarkersSerializer(serializers.ModelSerializer):
+    country = serializers.ReadOnlyField(source='country.name')
+
+    class Meta:
+        model = UserProfiles
+        fields = ['name', 'latitude', 'longitude', 'city', 'country']

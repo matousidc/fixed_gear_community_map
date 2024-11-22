@@ -7,8 +7,10 @@ var sortable = new Sortable(document.getElementById('sortable-list'), {
 function deletePhoto(button) {
     const photoId = button.getAttribute('data-photo-id');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const urls = {'delete-photo': '{% url "delete-bike-photo" photo_id=photo_id %}'};
 
-    fetch(`delete-photo/${photoId}`, {
+//    fetch(url.delete_photo)
+    fetch('delete-photo/${photoId}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
