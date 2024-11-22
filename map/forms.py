@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
             old_profile_photo = UserProfiles.objects.get(pk=self.instance.pk).profile_photo
             if old_profile_photo:
                 old_profile_photo.delete(save=False)
-        return super().save(commit)
+        return super().save(commit)  # TODO: error here somewhere, photos are being deleted by themself
 
 
 class BikePhotoForm(forms.ModelForm):

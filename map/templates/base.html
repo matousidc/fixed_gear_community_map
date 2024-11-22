@@ -249,21 +249,16 @@
             <a class="navbar-brand" href="/map/">Fixed gear community map</a>
         </div>
 
-        {% if profile %}
         <div id="navbar-out" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/map/logout">Logout</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
             </ul>
         </div>
-        {% endif %}
-
-        {% block navbar %}
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/map/login">Login</a></li>
-            </ul>
-        </div>
-        {% endblock %}
 
     </div>
 </nav>
@@ -271,52 +266,6 @@
 <div class="container">
     {% block content %}{% endblock %}
 </div>
-
-
-<script>
-    function showModal(imageUrl, captionText) {
-        var modal = document.getElementById("photoModal");
-        var modalImage = document.getElementById("modalImage");
-        var modalCaption = document.getElementById("modalCaption");
-        modal.style.display = "block";
-        modalImage.src = imageUrl;
-        modalCaption.textContent = captionText;
-    }
-
-    function hideModal() {
-        var modal = document.getElementById("photoModal");
-        modal.style.display = "none";
-    }
-
-    var sortable = new Sortable(document.getElementById('sortable-list'), {
-        animation: 150,  // Smooth animations during drag-and-drop
-        ghostClass: 'sortable-ghost',  // CSS class applied during dragging
-        handle: '.drag-handle',  // Drag handle selector
-    });
-
-    function deletePhoto(button) {
-        const photoId = button.getAttribute('data-photo-id');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        fetch(`delete-photo/${photoId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                // If successful, remove the photo item from the DOM
-                button.closest('.photo-item').remove();
-            } else {
-                console.error('Failed to delete photo:', response.status);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-</script>
 
 </body>
 </html>

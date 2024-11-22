@@ -152,7 +152,6 @@ def user_detail_view(request, user_id: int):
     user = get_object_or_404(UserProfiles, user_id=user_id)
     bike_photos = BikePhoto.objects.filter(user=user)
     user.create_instagram_username()
-    # TODO: logout is rendered even if user is not logged in
     return render(request, 'profile.html', {'profile': user, 'bike_photos': bike_photos, 'user': request.user})
 
 

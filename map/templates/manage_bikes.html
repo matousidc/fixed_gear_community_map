@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% block navbar %}{% endblock %}
-
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -69,5 +68,6 @@
             </div>
         </div>
     </form>
+    <script defer src="{% static 'managing_bikes.js' %}"></script>
 </div>
 {% endblock %}
