@@ -1,6 +1,7 @@
-from .serializers import UserProfileSerializer, CreateUserProfileSerializer
+import requests
+from .serializers import UserProfileSerializer, CreateUserProfileSerializer, MarkersSerializer
 from .models import UserProfiles
-from rest_framework import generics, status, pagination, permissions, viewsets, filters
+from rest_framework import generics, status, pagination, permissions, filters
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -29,20 +30,6 @@ class UserProfileListView(generics.ListAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # def get_serializer_class(self):
-    #     if self.request.method == 'POST':
-    #         return CreateUserProfileSerializer
-    #     return UserProfileSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            serializer.save(user=request.user)
-        except ValueError:
-            raise PermissionDenied(detail="Only logged in users can create", code=status.HTTP_403_FORBIDDEN)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer
@@ -65,11 +52,25 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return Response(serializer.data)
 
 
-class ProfileDetailView(generics.RetrieveAPIView):
+class ProfileDetailView(generics.RetrieveAPIView, generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
+    permissions_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_object(self):
         try:
             return UserProfiles.objects.get(user=self.kwargs['user_id'])
         except UserProfiles.DoesNotExist:
             raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, *args, **kwargs):
+        profile = self.get_object()
+        if profile != request.user:
+            raise PermissionDenied(detail="You can only delete your own profile", code=status.HTTP_403_FORBIDDEN)
+        profile.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class GetMarkersView(generics.ListAPIView):
+    queryset = UserProfiles.objects.all()
+    serializer_class = MarkersSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

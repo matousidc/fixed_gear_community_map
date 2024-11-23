@@ -1,53 +1,51 @@
-{% extends "base_generic.html" %}
-
-<!--{% load static %}-->
-
-<!--<head>-->
-<!--    &lt;!&ndash;    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?{% now 'U' %}">&ndash;&gt;-->
-<!--    <link rel="stylesheet" type="text/css" href="static/style.css?{% now 'U' %}"/>-->
-<!--</head>-->
-
+{% extends "base.html" %}
+{% load static %}
+<!--{% block navbar %}{% endblock %}-->
 
 {% block content %}
-<nav>
-    <div style="float: right;">
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
-</nav>
-
-<h2 style="margin-left: 20px;">{{ profile.user.username }}'s profile</h2>
 
 <!-- Display Profile Information -->
 <div class="profile-container">
     <!-- Profile Info Section -->
     <div class="profile-info">
+        <h2>{{profile.name}}</h2>
         {% if profile.profile_photo %}
         <div>
-            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="200">
+            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" width="300" class="thumbnail"
+                 onclick="showModal('{{ profile.profile_photo.url }}')">
         </div>
         {% else %}
         <div>
-            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photosss" width="200">
+            <img src="{% static 'default-avatar-profile.jpg' %}" alt="Profile Photo" width="300">
         </div>
         {% endif %}
+        <p><strong>About:</strong></p>
+        <!--        <pre>{{ profile.about }}</pre>-->
+        <p>{{ profile.about|linebreaks }}</p>
         <p><strong>City:</strong> {{ profile.city }}</p>
-        <p><strong>Country:</strong> {{ profile.country }}</p>
-        <p><strong>Bike:</strong> {{ profile.bike }}</p>
+        <p><strong>Country:</strong> {{ profile.country.name }}</p>
         <p><strong>Instagram:</strong>
             {% if profile.instagram %}
-            <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram }}</a>
+            <a href="{{ profile.instagram }}" target="_blank">{{ profile.instagram_username }}</a>
             {% else %}
             None
             {% endif %}
         </p>
         <p><strong>Strava:</strong>
             {% if profile.strava %}
-            <a href="{{ profile.strava }}" target="_blank">{{ profile.strava }}</a>
+            <a href="{{ profile.strava }}" target="_blank">Strava profile</a>
             {% else %}
             None
             {% endif %}
         </p>
-
+        <!-- Button to Edit Profile -->
+        {% if profile.user == user %}
+        <div style="margin-bottom: 20px; margin-top: 20px;">
+            <a href="{% url 'create-profile' %}"
+               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
+                Profile</a>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Bike Photos Section -->
@@ -57,25 +55,32 @@
         <div class="bike-photos">
             {% for bike_photo in bike_photos %}
             <div class="bike-photo">
-                <p><strong>Bike Model:</strong> {{ bike_photo.bike_model }}</p>
-                <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}">
+                <img src="{{ bike_photo.photo.url }}" alt="{{ bike_photo.bike_model }}"
+                     class="thumbnail"
+                     onclick="showModal('{{ bike_photo.photo.url }}', '{{ bike_photo.bike_model | default_if_none:'' }}')">
             </div>
             {% endfor %}
         </div>
         {% else %}
         <p>No bike photos uploaded yet.</p>
         {% endif %}
+        <!-- Modal for image popup -->
+        <div id="photoModal" class="modal" onclick="hideModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+            <div id="modalCaption" class="modal-caption"></div>
+        </div>
+
+        {% if profile.user == user %}
+        <div style="margin-bottom: 10px;">
+            <a href="{% url 'manage-bikes' %}"
+               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Upload
+                or delete photos</a>
+
+        </div>
+        {% endif %}
     </div>
-</div>
-<!-- Button to Edit Profile -->
-{% if profile.user == user %}
-
-<div style="margin-left: 20px;">
-    <a href="{% url 'create-profile' %}"
-       style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
-        Profile</a>
-
+    <script defer src="{% static 'profile_modal.js' %}"></script>
 </div>
 
-{% endif %}
 {% endblock %}

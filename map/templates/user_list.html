@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Profiles
+{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-left: 20px;">User Profiles</h1>
+<ul style="color: white; margin-left: 20px;">
+    {% for user in users %}
+    <li><a href="{% url 'user-detail' user.user_id %}" style="color: white">{{ user.name }} - {{user.city}},
+        {{user.country}}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

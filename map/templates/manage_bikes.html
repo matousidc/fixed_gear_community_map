@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <form action="{% url 'manage-bikes' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading" style=" background-color: #202020; color: white;">Upload, Delete or Rearrange
+                    photos
+                </div>
+                <div class="panel-body dark-background">
+                    {% if error_message %}
+                    <p class="bg-danger p-d ml-b" style="background-color: #333; color: red;">{{ error_message }}</p>
+                    {% endif %}
+                    <!-- Display existing photos -->
+                    <div class="photo-gallery" id="sortable-list" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        {% for photo in user_photos %}
+                        <div class="photo-item">
+                            <img src="{{ photo.photo.url }}" alt="Bike Photo" class="thumbnail-manage">
+                            <div class="drag-handle">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                            </div>
+                            <input type="hidden" name="photo-order[]" value="{{ photo.id }}">
+                            <div class="form-group clearfix">
+                                <label for="bike_model" class="col-md-5 control-label text-left"
+                                       style="text-align: left; margin-top: 10px; margin-right: -30px;">Bike
+                                    model:</label>
+                                <div class="col-md-6">
+                                    {{ photo.bike_model.errors }}
+                                    <input name="bike_model" value="{{photo.bike_model}}"
+                                           type="text" class="form-control" style="width: 200px; margin-top: 10px;"/>
+                                </div>
+                            </div>
+                            <!-- Delete button for each photo -->
+                            <button type="button" style="margin-top: 0px;" class="btn btn-danger"
+                                    data-photo-id="{{ photo.id }}"
+                                    onclick="deletePhoto(this)">Delete
+                            </button>
+                        </div>
+                        {% empty %}
+                        <p>No photos uploaded yet.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Upload photo form -->
+                    <div class="form-group clearfix">
+                        <label for="photo" class="col-md-4 control-label text-right">Upload Bike Photo:</label>
+                        <div class="col-md-6">
+                            {{ bike_photo_form.photo.errors }}
+                            <input name="photo" type="file" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="bike_model" class="col-md-4 control-label text-right">Bike
+                            Model:</label>
+                        <div class="col-md-6">
+                            {{ photo.bike_model.errors }}
+                            <input name="bike_model" value="{{photo.bike_model}}" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-4">
+                        <input type="submit" value="Save changes" class="submit-button"/>
+                        <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script defer src="{% static 'managing_bikes.js' %}"></script>
+</div>
+{% endblock %}
