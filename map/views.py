@@ -23,7 +23,7 @@ def index_view(request):
 
 # Sign-up view
 def signup_view(request):
-    template = 'signup_test.html'
+    template = 'signup_htmx.html'
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -50,7 +50,7 @@ def signup_view(request):
 
 # Login view using Django's built-in AuthenticationForm
 def login_view(request):
-    template = 'login_test.html'
+    template = 'login_htmx.html'
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():

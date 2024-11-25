@@ -234,8 +234,9 @@
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
           rel='stylesheet'/>
 
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
-<body class="override dark-background">
+<body class="override dark-background" id="entire-page">
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -246,7 +247,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/map/">Fixed gear community map</a>
+            <a class="navbar-brand" href="{% url 'index' %}">Fixed gear community map</a>
         </div>
 
         <div id="navbar-out" class="collapse navbar-collapse">

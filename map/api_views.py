@@ -74,3 +74,4 @@ class GetMarkersView(generics.ListAPIView):
     queryset = UserProfiles.objects.all()
     serializer_class = MarkersSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # TODO: prepared API for markers
