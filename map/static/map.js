@@ -25,7 +25,7 @@ if (typeof markerData !== "undefined") {
             `<div class="custom-popup">
                 <h3>${key}</h3>
                 <p>${value.popup_message}</p>
-                <p><a href="${value.profile}" target="_blank" rel="noopener noreferrer">Visit Profile</a></p>
+                <p><a href="${value.profile}" rel="noopener noreferrer">Visit Profile</a></p>
             </div>`, { className: 'popup-styled' });
     });
 }

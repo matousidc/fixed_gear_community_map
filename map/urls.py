@@ -12,6 +12,7 @@ urlpatterns = [
     path('user-list', views.user_list_view, name='user-list'),
     path('manage-bikes', views.manage_bikes_view, name='manage-bikes'),
     path('delete-photo/<int:photo_id>', views.delete_bike_photo, name='delete-bike-photo'),
+    path('upload-photo', views.upload_photo, name='upload-photo'),
     # api endpoints
     # path("create-profile-api", api_views.CreateUserProfileView.as_view(), name="create-profile-api"),
     # path("profile-list", api_views.UserProfileListView.as_view(), name="profile-list"),

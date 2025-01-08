@@ -20,7 +20,7 @@ class UserLoginTest(TestCase):
         user = auth.get_user(self.client)
         # Check that the login was successful
         self.assertEqual(response.status_code, 302)  # Expecting a redirect on successful login
-        self.assertRedirects(response, reverse('profile'))  # Assuming successful login redirects to 'profile'
+        self.assertRedirects(response, reverse('profile'))
         self.assertTrue(user.is_authenticated)
         self.assertTrue(
             self.client.login(username='testuser',

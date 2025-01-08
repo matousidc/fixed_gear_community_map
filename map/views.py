@@ -1,4 +1,6 @@
+import random
 import requests
+from django.db.models import Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.contrib.auth import login as auth_login
@@ -6,7 +8,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpRequest, Http404
+from django.http import HttpRequest, Http404, JsonResponse
 from .forms import SignUpForm, LoginForm, ProfileForm, BikePhotoForm
 from .models import UserProfiles, BikePhoto
 
@@ -81,6 +83,7 @@ def logout_view(request):
 
 @login_required
 def create_profile_view(request):
+    template = 'create_profile_htmx.html'
     profile = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
     if request.method == 'POST':
         # instance= Prefill the form with the existing profile
@@ -90,29 +93,31 @@ def create_profile_view(request):
                 # needed to get the instance without saving (commit=False) and update attributes
                 user_profile = profile_form.save(commit=False)
                 if 'city' in profile_form.changed_data:
-                    resp = nominatim_api(request)
-                    user_profile.latitude = resp[0]['lat']
-                    user_profile.longitude = resp[0]['lon']
+                    lat, lon = nominatim_api(request)
+                    user_profile.latitude = lat
+                    user_profile.longitude = lon
                 user_profile.save()  # Save the updated profile
             return redirect('profile')  # Redirect to the profile view page
+        else:
+            return render(request, template, {'profile_form': profile_form})
     else:
         profile_form = ProfileForm(instance=profile)  # Prefill the form with the current profile data
-    return render(request, 'create_profile_test.html',
+    return render(request, template,
                   {'profile_form': profile_form})
 
 
-def nominatim_api(request) -> dict:
-    """Finds GPS location for the city user specified in the form"""
+def nominatim_api(request) -> tuple[float, float]:
+    """Finds GPS location for the city user specified in the form, randomly picks a location within the area"""
     location_url = f"https://nominatim.openstreetmap.org/search?q={request.POST['city']},{request.POST['country']}&format=json&limit=1"
     headers = {
         'User-Agent': 'Fixed gear community map',
         'email': 'matousslonek@gmail.com'
     }
     resp = requests.get(location_url, headers=headers)
-    lat, lon = resp.json()[0]['lat'], resp.json()[0]['lon']
-    bounding_box = resp.json()[0]['boundingbox']  # example: ['52.3382448', '52.6755087', '13.0883450', '13.7611609']
-    # TODO: randomly place marker within the bounding box
-    return resp.json()
+    bbox = resp.json()[0]['boundingbox']  # example: ['52.3382448', '52.6755087', '13.0883450', '13.7611609']
+    lat = round(random.uniform(float(bbox[0]), float(bbox[1])), 6)
+    lon = round(random.uniform(float(bbox[2]), float(bbox[3])), 6)
+    return lat, lon
 
 
 @login_required
@@ -126,18 +131,34 @@ def manage_bikes_view(request):
         with transaction.atomic():
             for idx, photo_id in enumerate(photo_order):  # updating order for existing photos
                 BikePhoto.objects.filter(id=int(photo_id)).update(display_order=idx, bike_model=bike_models[idx])
-
-        bike_photo_form = BikePhotoForm(request.POST, request.FILES)  # new uploaded pics
-        if bike_photo_form.is_valid():  # TODO: use form.save() override
-            if bike_photo_form.has_changed():
-                photo = request.FILES.get('photo')
-                if photo:
-                    BikePhoto.objects.create(user=user, photo=photo,
-                                             bike_model=bike_photo_form.cleaned_data['bike_model'])
         return redirect('profile')  # Redirect to the profile view page
     else:
         bike_photo_form = BikePhotoForm()
-    return render(request, 'manage_bikes.html', {'bike_photo_form': bike_photo_form, 'user_photos': bike_photos})
+    return render(request, 'manage_bikes_htmx.html', {'bike_photo_form': bike_photo_form, 'user_photos': bike_photos})
+
+
+@login_required
+def upload_photo(request):
+    """Uploads a new photo using HTMX request"""
+    user = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
+    if request.method == 'POST':
+        bike_photo_form = BikePhotoForm(request.POST, request.FILES)
+        if bike_photo_form.is_valid():
+            photo = bike_photo_form.cleaned_data['photo']
+            if photo:
+                max_display_order = BikePhoto.objects.filter(user=user).aggregate(Max('display_order'))[
+                    'display_order__max']
+                display_order = (max_display_order or 0) + 1 if max_display_order is not None else 0
+                BikePhoto.objects.create(user=user, photo=photo, bike_model=bike_photo_form.cleaned_data['bike_model'],
+                                         display_order=display_order)
+
+            bike_photos = BikePhoto.objects.filter(user=user)
+            return render(request, 'manage_bikes_htmx.html',
+                          {'bike_photo_form': bike_photo_form, 'user_photos': bike_photos})
+            # return redirect('manage-bikes')
+        else:
+            return JsonResponse({'errors': bike_photo_form.errors}, status=400)
+    return JsonResponse({'error': 'Invalid request.'}, status=400)
 
 
 @login_required
@@ -149,10 +170,13 @@ def profile_view(request):
 
 
 def user_detail_view(request, user_id: int):
-    user = get_object_or_404(UserProfiles, user_id=user_id)
-    bike_photos = BikePhoto.objects.filter(user=user)
-    user.create_instagram_username()
-    return render(request, 'profile.html', {'profile': user, 'bike_photos': bike_photos, 'user': request.user})
+    if request.user.is_authenticated:
+        profile = get_object_or_404(UserProfiles, user_id=user_id)
+        bike_photos = BikePhoto.objects.filter(user=profile)
+        profile.create_instagram_username()
+        return render(request, 'profile.html', {'profile': profile, 'bike_photos': bike_photos, 'user': request.user})
+    else:
+        return render(request, 'not_authenticated.html')
 
 
 def user_list_view(request: HttpRequest):

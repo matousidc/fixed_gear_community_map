@@ -10,7 +10,7 @@ function deletePhoto(button) {
     const urls = {'delete-photo': '{% url "delete-bike-photo" photo_id=photo_id %}'};
 
 //    fetch(url.delete_photo)
-    fetch('delete-photo/${photoId}', {
+    fetch(`delete-photo/${photoId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

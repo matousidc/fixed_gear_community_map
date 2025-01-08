@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form hx-post="{% url 'signup' %}" hx-target="#entire-page" hx-swap="innerHTML">
+<form hx-post="{% url 'signup' %}" hx-target="#entire-page" hx-swap="innerHTML" hx-push-url="true">
     {% csrf_token %}
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
@@ -34,7 +34,8 @@
                 </div>
                 <div class="col-md-6 col-md-offset-4">
                     <input type="submit" value="Register" class="submit-button"> &nbsp;
-                    <a href="{% url 'login' %}">or Login</a>
+                    <a href="{% url 'login' %}" hx-get="{% url 'login' %}" hx-target="#entire-page" hx-swap="innerHTML">or
+                        Login</a>
                 </div>
             </div>
         </div>
