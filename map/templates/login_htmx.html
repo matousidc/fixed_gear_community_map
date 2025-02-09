@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<form hx-post="{% url 'login' %}" hx-target="#entire-page" hx-swap="innerHTML" hx-push-url="true">
+<form hx-post="{% url 'login' %}" hx-target="#entire-page" hx-swap="innerHTML" hx-push-url="true" id="login-form">
     {% csrf_token %}
+
+    <input type="hidden" name="user_id" id="user-id-input" value="">
+
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading" style=" background-color: #202020; color: white;">Login</div>
@@ -33,4 +37,5 @@
         </div>
     </div>
 </form>
+<script defer src="{% static 'login_userid.js' %}"></script>
 {% endblock %}

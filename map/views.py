@@ -8,7 +8,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpRequest, Http404, JsonResponse
+from django.http import Http404, JsonResponse
 from .forms import SignUpForm, LoginForm, ProfileForm, BikePhotoForm
 from .models import UserProfiles, BikePhoto
 
@@ -69,6 +69,9 @@ def login_view(request):
                 })
             else:
                 auth_login(request, form.get_user())
+            # redirect to user's detail after login when unauthenticated user wants to view user detail
+            if request.POST.get("user_id"):
+                return redirect('user-detail', request.POST['user_id'])
             return redirect('profile')
     else:
         form = AuthenticationForm()
@@ -170,16 +173,18 @@ def profile_view(request):
 
 
 def user_detail_view(request, user_id: int):
+    """Only authenticated users can view user detail page, otherwise redirect to login page and after that shows user
+    detail"""
     if request.user.is_authenticated:
         profile = get_object_or_404(UserProfiles, user_id=user_id)
         bike_photos = BikePhoto.objects.filter(user=profile)
         profile.create_instagram_username()
         return render(request, 'profile.html', {'profile': profile, 'bike_photos': bike_photos, 'user': request.user})
     else:
-        return render(request, 'not_authenticated.html')
+        return render(request, 'not_authenticated.html', {'user_id': user_id})
 
 
-def user_list_view(request: HttpRequest):
+def user_list_view(request):
     users = UserProfiles.objects.all().order_by('name')
     return render(request, 'user_list.html', {'users': users})
 
