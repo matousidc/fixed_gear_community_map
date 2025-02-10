@@ -41,9 +41,13 @@
         <!-- Button to Edit Profile -->
         {% if profile.user == user %}
         <div style="margin-bottom: 20px; margin-top: 20px;">
-            <a href="{% url 'create-profile' %}"
-               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Edit
-                Profile</a>
+            <button
+                    hx-get="{% url 'create-profile' %}"
+                    hx-target="#entire-page"
+                    hx-swap="innerHTML"
+                    style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">
+                Edit Profile
+            </button>
         </div>
         {% endif %}
     </div>
@@ -73,10 +77,13 @@
 
         {% if profile.user == user %}
         <div style="margin-bottom: 10px;">
-            <a href="{% url 'manage-bikes' %}"
-               style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">Upload
-                or delete photos</a>
-
+            <button
+                    hx-get="{% url 'manage-bikes' %}"
+                    hx-target="#entire-page"
+                    hx-swap="innerHTML"
+                    style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">
+                Upload or delete photos
+            </button>
         </div>
         {% endif %}
     </div>
