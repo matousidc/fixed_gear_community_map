@@ -27,5 +27,4 @@ def get_user_token():
     response = requests.post(url, data=data)
     print(response.json())
 
-
-get_user_token()
+# get_user_token()
