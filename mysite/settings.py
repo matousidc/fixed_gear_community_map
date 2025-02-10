@@ -58,7 +58,7 @@ LOGIN_REDIRECT_URL = '/map/profile'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [BASE_DIR / "static"]  # If your static files are outside the app directories
+STATICFILES_DIRS = [BASE_DIR / "map/static"]  # If your static files are outside the app directories
 
 TEMPLATES = [
     {
