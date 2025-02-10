@@ -146,6 +146,8 @@ REST_FRAMEWORK = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+CSRF_TRUSTED_ORIGINS = ['https://fixed-gear-map-gcj3o.kinsta.app']
+
 # GDAL_LIBRARY_PATH = r"C:\OSGeo4W\bin\gdal309.dll"
 # GEOS_LIBRARY_PATH = r"C:\OSGeo4W\bin\geos_c.dll"
 # PROJ_LIBRARY_PATH = r'C:\OSGeo4W64\share\proj'
