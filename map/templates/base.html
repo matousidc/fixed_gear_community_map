@@ -37,7 +37,7 @@
             font-size: 16px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 70%;
+            width: 700px;
             margin-bottom: 20px;
         }
         .profile-info h2 {
@@ -50,7 +50,7 @@
             justify-content: center;
             # background-color: red;
         }
-            .bike-photos-container {
+        .bike-photos-container {
             flex: 1;  /* Bike photos take up 1 unit of space */
             padding-bottom: 20px;
             border-radius: 8px;
@@ -59,7 +59,7 @@
             display: flex;
             flex-direction: column;
             margin-bottom: 20px;
-            width: 70%;
+            width: 700px;
             background-color: #202020;
         }
 
@@ -109,7 +109,7 @@
             margin: auto;
             display: block;
             max-width: 70%;
-            max-height: 70%;
+            max-height: 90%;
         }
         .modal-caption {
             color: #ccc;
@@ -219,7 +219,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
@@ -242,8 +247,8 @@
 <nav class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-out"
+                    aria-controls="navbar-out" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -253,7 +258,7 @@
         </div>
 
         <div id="navbar-out" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right ">
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'profile' %}">Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
