@@ -3,7 +3,7 @@
 {% block navbar %}{% endblock %}
 {% load add_class %}
 {% block content %}
-<form hx-post="{% url 'create-profile' %}" hx-target="#entire-page" hx-swap="innerHTML">
+<form hx-post="{% url 'create-profile' %}" hx-target="#entire-page" hx-swap="innerHTML" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
