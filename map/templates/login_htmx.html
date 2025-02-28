@@ -2,40 +2,38 @@
 {% load static %}
 
 {% block content %}
-<form hx-post="{% url 'login' %}" hx-target="#entire-page" hx-swap="innerHTML" hx-push-url="true" id="login-form">
-    {% csrf_token %}
+<style>
+    body {
+        height: 100vh;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={% now 'U' %}">
 
-    <input type="hidden" name="user_id" id="user-id-input" value="">
+<div class="grid-overlay"></div>
 
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading" style=" background-color: #202020; color: white;">Login</div>
-            <div class="panel-body dark-background" id="panel-body">
-                <div id="error-message-container">
-                    {% if error_message %}
-                    <p class="bg-danger p-d ml-b" style="background-color: #333; color: red;">{{ error_message }}</p>
-                    {% endif %}
-                </div>
-                <div class="form-group clearfix">
-                    <label for="email" class="col-md-4 control-label text-right">Email:</label>
-                    <div class="col-md-6">
-                        <input name="email" value="" type="email" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="password" class="col-md-4 control-label text-right">Password:</label>
-                    <div class="col-md-6">
-                        <input name="password" type="password" class="form-control"/>
-                    </div>
-                </div>
-                <div class="col-md-6 col-md-offset-4">
-                    <input name="login" type="submit" value="Login" class="submit-button"/> &nbsp;
-                    <a href="{% url 'signup' %}" hx-get="{% url 'signup' %}" hx-target="#entire-page"
-                       hx-swap="innerHTML">or Register</a>
-                </div>
-            </div>
+<div class="login-container">
+    <form hx-post="{% url 'login' %}" hx-target="#entire-page" hx-swap="innerHTML" hx-push-url="true" id="login-form"
+          class="login-panel">
+        {% csrf_token %}
+        <h2>Login</h2>
+
+        <div id="error-message-container">
+            {% if error_message %}
+            <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+            {% endif %}
         </div>
-    </div>
-</form>
+
+        <input type="hidden" name="user_id" id="user-id-input" value="">
+
+        <input name="email" type="email" placeholder="Email" required/>
+        <input name="password" type="password" placeholder="Password" required/>
+
+        <input type="submit" value="Login" class="login-button"/>
+
+        <p class="register-link">Don't have an account? <a href="{% url 'signup' %}" hx-get="{% url 'signup' %}"
+                                                           hx-target="#entire-page" hx-swap="innerHTML">Register</a></p>
+    </form>
+</div>
+
 <script defer src="{% static 'login_userid.js' %}"></script>
 {% endblock %}

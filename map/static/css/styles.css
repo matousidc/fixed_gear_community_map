@@ -1,0 +1,512 @@
+body {
+    background: linear-gradient(180deg, #000000 30%, #7d4893 90%);  /* lighter color #884ea0 */
+    color: #d1c1e0;
+    font-family: 'Core Sans NR SC Ext ExtraBold', sans-serif;
+    overflow-x: hidden;
+    text-align: center;
+}
+
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: linear-gradient(rgba(255,255,255, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255, 0.2) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+/* ====================================== Landing page */
+
+.hero-text {
+    position: relative;
+    margin-top: 20px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-text h1 {
+    font-size: 5.5rem;
+    font-weight: bold;
+    color: #b3a5d3;
+    text-shadow: 0 0 8px #7a6599;
+}
+
+.hero-text p {
+    font-size: 2rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 6px #7a6599;
+    max-width: 800px;
+}
+
+.join-button {
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1e1a2e;
+    background: #b3a5d3;
+    border: 2px solid #b3a5d3;
+    border-radius: 8px;
+    text-shadow: 0 0 6px #7a6599;
+    transition: 0.3s;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.join-button:hover {
+    background: transparent;
+    color: #b3a5d3;
+    text-shadow: 0 0 10px #b3a5d3;
+    box-shadow: 0 0 12px #b3a5d3;
+}
+
+#map {
+    height: 500px;
+    border-radius: 15px;
+    box-shadow: 0 0 8px rgba(179, 165, 211, 0.4);
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+/* Popup container styling */
+.leaflet-popup-content {
+    font-family: Arial, sans-serif;
+    font-size: 16px; /* Larger font size */
+    color: #333; /* Darker text color */
+    line-height: 1.5;
+    margin: 0;
+    padding: 10px;
+}
+
+/* Custom class for additional popup styling */
+.popup-styled .leaflet-popup-content-wrapper {
+    background-color: #f9f9f9; /* Light background */
+    border: 2px solid purple; /* Green border */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add some shadow */
+    padding: 5px;
+}
+.popup-styled h3 {
+    font-size: 20px; /* Larger font for the title */
+    color: purple;
+    margin: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd; /* Optional divider */
+}
+.popup-styled p {
+    margin: 5px 0 0;
+    color: #555; /* Slightly lighter text */
+    font-size: 12px;
+}
+.custom-popup a {
+    color: #1d72b8; /* Link color */
+    text-decoration: underline; /* Underline the link */
+}
+.custom-popup a:hover {
+    color: #0056b3; /* Hover color */
+}
+
+/* ========================== Login/Signup page */
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    position: relative;
+    z-index: 2;
+}
+
+.login-panel {
+    background: rgba(20, 10, 30, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    # box-shadow: 0 0 16px rgba(255, 0, 255, 0.6);
+}
+
+.login-panel h2 {
+    font-size: 4rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 12px #7a6599;
+    margin-bottom: 20px;
+}
+
+.login-panel input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    color: #000;
+    font-weight: bold;
+}
+
+.login-button {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e1a2e;
+    background: #b3a5d3;
+    border-radius: 12px;
+    text-shadow: 0 0 6px #7a6599;
+    transition: 0.3s;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.login-button:hover {
+    background: transparent;
+    color: #b3a5d3;
+    text-shadow: 0 0 10px #b3a5d3;
+    box-shadow: 0 0 12px #b3a5d3;
+}
+
+.register-link {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 6px #7a6599;
+}
+
+.register-link a {
+    color: #fff;
+    text-decoration: none;
+    # text-shadow: 0 0 6px #7a6599;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* =============================== Profile page */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #202020;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #fff;
+    /* text-shadow: 0 0 6px #7a6599; */
+    padding: 20px;
+    border-radius: 12px;
+    width: 70%;
+    margin-bottom: 20px;
+}
+
+.profile-info p strong {
+    color: #b3a5d3;
+}
+
+.profile-info h2 {
+    text-shadow: 0 0 6px #7a6599;
+    font-size: 40px;
+    color: #b3a5d3;
+}
+
+.profile-info a {
+    text-shadow: none;
+}
+
+.bike-photos-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #202020;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 6px #7a6599;
+    padding: 20px;
+    border-radius: 12px;
+    width: 70%;
+    margin-bottom: 20px;
+}
+
+.bike-photos-container h3 {
+    font-size: 40px;
+}
+
+.thumbnail {
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 5px;
+        max-width: 400px;
+        height: auto;
+        transition: 0.1s;
+}
+.thumbnail:hover {
+        border: 2px solid #555;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 30px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.97);
+}
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+}
+.modal-caption {
+    color: #ccc;
+    font-size: 18px;
+    text-align: center;
+    padding: 10px 20px;
+    font-weight:bold;
+}
+
+.bike-photos {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bike-photo {
+    padding: 10px;
+    text-align: center;
+}
+
+.bike-photo img {
+    max-width: 600px;
+    height: auto;
+}
+/* ==================================== Create profile */
+
+/* Centered Form Container */
+.create-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 30px;
+}
+
+/* Panel (Form Box) */
+.create-panel {
+    align-items: center;
+    background: rgba(20, 10, 30, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Form Title */
+.create-panel h2 {
+    font-size: 4rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 12px #7a6599;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.create-panel input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    color: #000;
+    font-weight: bold;
+}
+
+.centered-form {
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column;
+    justify-content: center; /* Center horizontally */
+}
+.centered-form > * { /* centers the contents of the form */
+    display: block; /* ensure the form contents are block elements */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Links */
+.cancel-link {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 0 0 6px #7a6599;
+}
+
+.cancel-link:hover {
+    text-decoration: underline;
+    text-shadow: none;
+}
+
+
+/* ========================= Manage bikes */
+/* General form container styling */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 30px;
+}
+
+.form-panel {
+    background: rgba(20, 10, 30, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 800px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-panel  > * { /* centers the contents of the form */
+    display: block; /* ensure the form contents are block elements */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-panel h2 {
+    font-size: 4rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 12px #7a6599;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.form-group {
+    width: 80%;
+    margin-bottom: 15px;
+    justify-content: center; /* Center horizontally */
+}
+
+.form-group label {
+    font-size: 1.5rem;
+    color: #b3a5d3;
+    text-shadow: 0 0 6px #7a6599;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    color: #000;
+    font-weight: bold;
+}
+
+.form-actions {
+    width: 100%;
+}
+
+/* Error Messages */
+.error-message {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: red;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+/* Delete Button */
+.delete-button {
+    background: red;
+    color: white;
+    font-size: 1.5rem;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.delete-button:hover {
+    background: darkred;
+}
+
+/* Photo Gallery */
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.photo-item {
+    position: relative;
+    background: rgba(30, 15, 50, 0.95);
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 250px;
+    width: 100%;
+    box-shadow: 0 0 12px rgba(255, 0, 255, 0.4);
+    margin-bottom: 30px;
+    margin-right: 30px;
+}
+
+.thumbnail-manage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+.sortable-ghost {
+    opacity: 0.4;  /* Semi-transparent during dragging */
+    border: 2px dashed #ccc;
+}
+
+.drag-handle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: black;
+    padding: 4px;
+    cursor: grab;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.drag-handle i {
+    font-size: 32px;
+}

@@ -3,87 +3,78 @@
 {% block navbar %}{% endblock %}
 {% load add_class %}
 {% block content %}
-<form hx-post="{% url 'create-profile' %}" hx-target="#entire-page" hx-swap="innerHTML">
-    {% csrf_token %}
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading" style=" background-color: #202020; color: white;">Create or Update your
-                profile
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={% now 'U' %}">
+<div class="grid-overlay"></div>
+
+<div class="create-container">
+    <div class="create-panel">
+        <h2>Create or Update Your Profile</h2>
+
+        <form class="centered-form" hx-post="{% url 'create-profile' %}" hx-target="#entire-page" hx-swap="innerHTML">
+            {% csrf_token %}
+
+            {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                {{ profile_form.name.errors }}
+                <input name="name" value="{{ profile_form.name.value|default_if_none:'' }}" type="text"
+                       class="form-control"/>
             </div>
-            <div class="panel-body dark-background">
-                {% if error_message %}
-                <p class="bg-danger p-d ml-b" style="background-color: #333; color: red;">{{ error_message }}</p>
-                {% endif %}
-                <!-- Profile Form -->
-                <h3>Profile Information</h3>
-                <div class="form-group clearfix">
-                    <label for="name" class="col-md-4 control-label text-right">Name:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.name.errors }}
-                        <input name="name" value="{{profile_form.name.value | default_if_none:''}}" type="text"
-                               class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="about" class="col-md-4 control-label text-right">About me:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.about.errors }}
-                        <textarea name="about" rows="4" cols="50" class="form-control">{{ profile_form.about.value|default_if_none:'' }}</textarea>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="country" class="col-md-4 control-label text-right">Country:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.country|add_class:"form-control" }}
-                        {{ profile_form.country.errors }}
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="city" class="col-md-4 control-label text-right">City:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.city.errors }}
-                        <input name="city" value="{{profile_form.city.value | default_if_none:''}}" type="text"
-                               class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="instagram" class="col-md-4 control-label text-right">Instagram:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.instagram.errors }}
-                        <input name="instagram" value="{{profile_form.instagram.value | default_if_none:''}}"
-                               type="text"
-                               class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="strava" class="col-md-4 control-label text-right">Strava:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.strava.errors }}
-                        <input name="strava" value="{{profile_form.strava.value | default_if_none:''}}" type="text"
-                               class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group clearfix">
-                    <label for="profile_photo" class="col-md-4 control-label text-right">Profile Photo:</label>
-                    <div class="col-md-6">
-                        {{ profile_form.profile_photo.errors }}
-                        <input name="profile_photo"
-                               value="{{profile_form.profile_photo.url | default_if_none:''}}" type="file"
-                               class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-6 col-md-offset-4">
-                    <input type="submit" value="Save profile" class="submit-button"/>
-                    <a href="{% url 'profile' %}"
-                       hx-get="{% url 'profile' %}"
-                       hx-target="#entire-page"
-                       hx-swap="innerHTML"
-                       class="btn btn-secondary">
-                        Cancel
-                    </a>
-                </div>
+
+            <div class="form-group">
+                <label for="about">About me:</label>
+                {{ profile_form.about.errors }}
+                <textarea name="about" rows="4"
+                          class="form-control">{{ profile_form.about.value|default_if_none:'' }}</textarea>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="country">Country:</label>
+                {{ profile_form.country|add_class:"form-control" }}
+                {{ profile_form.country.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                {{ profile_form.city.errors }}
+                <input name="city" value="{{ profile_form.city.value|default_if_none:'' }}" type="text"
+                       class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="instagram">Instagram:</label>
+                {{ profile_form.instagram.errors }}
+                <input name="instagram" value="{{ profile_form.instagram.value|default_if_none:'' }}" type="text"
+                       class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="strava">Strava:</label>
+                {{ profile_form.strava.errors }}
+                <input name="strava" value="{{ profile_form.strava.value|default_if_none:'' }}" type="text"
+                       class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_photo">Profile Photo:</label>
+                {{ profile_form.profile_photo.errors }}
+                <input name="profile_photo" type="file" class="form-control"/>
+            </div>
+
+            <!-- Form Buttons -->
+            <div class="form-actions">
+                <input type="submit" value="Save Profile" class="login-button"/>
+                <a href="{% url 'profile' %}" hx-get="{% url 'profile' %}" hx-target="#entire-page" hx-swap="innerHTML"
+                   class="cancel-link">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
 {% endblock %}

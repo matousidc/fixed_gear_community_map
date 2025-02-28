@@ -118,8 +118,15 @@ def nominatim_api(request) -> tuple[float, float]:
     }
     resp = requests.get(location_url, headers=headers)
     bbox = resp.json()[0]['boundingbox']  # example: ['52.3382448', '52.6755087', '13.0883450', '13.7611609']
-    lat = round(random.uniform(float(bbox[0]), float(bbox[1])), 6)
-    lon = round(random.uniform(float(bbox[2]), float(bbox[3])), 6)
+    bbox = [float(x) for x in bbox]
+    center_lat = float(resp.json()[0]['lat'])  # bbox is sometimes too large, puts marker outside the city
+    center_lon = float(resp.json()[0]['lon'])
+    bbox[0] = center_lat - (center_lat - bbox[0]) * 0.4
+    bbox[1] = center_lat + (bbox[1] - center_lat) * 0.4
+    bbox[2] = center_lon - (center_lon - bbox[2]) * 0.4
+    bbox[3] = center_lon + (bbox[3] - center_lon) * 0.4
+    lat = round(random.uniform(bbox[0], bbox[1]), 6)
+    lon = round(random.uniform(bbox[2], bbox[3]), 6)
     return lat, lon
 
 

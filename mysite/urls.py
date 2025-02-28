@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 from rest_framework.authtoken import views
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/map/', permanent=True), name='root'),
     path("map/", include("map.urls")),
     path("api/", include("map.api_urls")),
     path('admin/', admin.site.urls),

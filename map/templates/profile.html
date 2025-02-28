@@ -3,6 +3,8 @@
 <!--{% block navbar %}{% endblock %}-->
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={% now 'U' %}">
+<div class="grid-overlay"></div>
 
 <!-- Display Profile Information -->
 <div class="profile-container">
@@ -40,12 +42,11 @@
         </p>
         <!-- Button to Edit Profile -->
         {% if profile.user == user %}
-        <div style="margin-bottom: 20px; margin-top: 20px;">
-            <button
+        <div style="margin-bottom: 20px;">
+            <button class="login-button"
                     hx-get="{% url 'create-profile' %}"
                     hx-target="#entire-page"
-                    hx-swap="innerHTML"
-                    style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">
+                    hx-swap="innerHTML">
                 Edit Profile
             </button>
         </div>
@@ -77,11 +78,10 @@
 
         {% if profile.user == user %}
         <div style="margin-bottom: 10px;">
-            <button
+            <button class="login-button"
                     hx-get="{% url 'manage-bikes' %}"
                     hx-target="#entire-page"
-                    hx-swap="innerHTML"
-                    style="padding: 10px; background-color: purple; color: white; text-decoration: none; border-radius: 5px;">
+                    hx-swap="innerHTML">
                 Upload or delete photos
             </button>
         </div>
