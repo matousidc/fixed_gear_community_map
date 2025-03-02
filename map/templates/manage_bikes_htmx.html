@@ -11,11 +11,12 @@
 
         <div class="form-group">
             <label for="photo">Upload Bike Photo:</label>
-            <form hx-post="{% url 'upload-photo' %}" hx-target="#entire-page" enctype="multipart/form-data">
+            <form hx-post="{% url 'upload-photo' %}" hx-target="#entire-page" enctype="multipart/form-data"
+                  hx-trigger="change from:#photo-input">>
                 {% csrf_token %}
                 {{ bike_photo_form.photo.errors }}
                 <input type="file" name="photo" id="photo-input" class="form-control">
-                <button type="submit" class="login-button">Upload Photo</button>
+                <!--                <button type="submit" class="login-button">Upload Photo</button>-->
             </form>
         </div>
 

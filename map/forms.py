@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfiles, BikePhoto
@@ -32,6 +34,9 @@ class LoginForm(forms.Form):
 
 
 class ProfileForm(forms.ModelForm):
+    instagram = forms.URLField(required=False, label="Instagram URL")
+    strava = forms.URLField(required=False, label="Strava URL")
+
     class Meta:
         model = UserProfiles
         fields = ['about', 'name', 'city', 'country', 'instagram', 'strava', 'profile_photo']
@@ -44,6 +49,22 @@ class ProfileForm(forms.ModelForm):
             if old_profile_photo:
                 old_profile_photo.delete(save=False)
         return super().save(commit)
+
+    def clean_instagram(self):
+        instagram = self.cleaned_data.get('instagram')
+        if instagram:
+            pattern = r'^(https?:\/\/)?(www\.)?instagram\.com\/[A-Za-z0-9_.-]+\/?$'
+            if not re.match(pattern, instagram):
+                raise forms.ValidationError("Enter a valid Instagram profile URL.")
+        return instagram
+
+    def clean_strava(self):
+        strava = self.cleaned_data.get('strava')
+        if strava:
+            pattern = r'^(https?:\/\/)?(www\.)?strava\.com\/[A-Za-z0-9_/.-]+$'
+            if not re.match(pattern, strava):
+                raise forms.ValidationError("Enter a valid Strava profile URL.")
+        return strava
 
 
 class BikePhotoForm(forms.ModelForm):

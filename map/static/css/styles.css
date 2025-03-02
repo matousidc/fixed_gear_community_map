@@ -202,7 +202,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #202020;
+    background-color: rgba(20, 10, 30, 0.95);
     text-align: center;
     font-size: 1.5rem;
     color: #fff;
@@ -232,7 +232,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #202020;
+    /* background-color: #202020; */
+    background-color: rgba(20, 10, 30, 0.95);
     text-align: center;
     font-size: 1.5rem;
     color: #b3a5d3;
@@ -455,6 +456,7 @@ body {
     margin-top: 10px;
     cursor: pointer;
     width: 100%;
+    font-weight: bold;
 }
 
 .delete-button:hover {
@@ -509,4 +511,7 @@ body {
 }
 .drag-handle i {
     font-size: 32px;
+}
+.errorlist {
+  color: red;
 }

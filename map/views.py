@@ -89,10 +89,12 @@ def create_profile_view(request):
     template = 'create_profile_htmx.html'
     profile = UserProfiles.objects.get(user=request.user)  # Get the current user's profile
     if request.method == 'POST':
-        # instance= Prefill the form with the existing profile
+        # instance= Prefills the form with the existing profile
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         if profile_form.is_valid():
             if profile_form.has_changed():
+                profile_form.clean_strava()  # sanitizing url inputs
+                profile_form.clean_instagram()  # TODO: test this shit
                 # needed to get the instance without saving (commit=False) and update attributes
                 user_profile = profile_form.save(commit=False)
                 if 'city' in profile_form.changed_data:
